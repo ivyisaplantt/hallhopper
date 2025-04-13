@@ -1,0 +1,39 @@
+{
+    "building": "William E. Kirwan Hall",
+    "nodes": [
+        { "id": "1199", "floor": 1, "type": "stairs" },
+        { "id": "1198", "floor": 1, "type": "hallway" },
+        { "id": "1299", "floor": 1, "type": "hallway" },
+        { "id": "1298", "floor": 1, "type": "entrance" },
+        { "id": "1399", "floor": 1, "type": "hallway" },
+        { "id": "1496", "floor": 1, "type": "hallway" },
+        { "id": "1498", "floor": 1, "type": "stair" },
+        { "id": "0199", "floor": 1, "type": "stair" },
+        { "id": "0198", "floor": 1, "type": "hallway" },
+        { "id": "0299", "floor": 1, "type": "hallway" },
+        { "id": "0399", "floor": 1, "type": "hallway" },
+        { "id": "0496", "floor": 1, "type": "hallway" },
+        { "id": "0498", "floor": 1, "type": "stair" },
+        { "id": "0493", "floor": 1, "type": "hallway" },
+        { "id": "0503", "floor": 1, "type": "hallway" }
+    ],
+    "edges": [
+        { "from": "1199", "to": "0199", "weight": 0 },
+        { "from": "0199", "to": "1199", "weight": 0 },
+        { "from": "1498", "to": "0498", "weight": 0 },
+        { "from": "0498", "to": "1498", "weight": 0 },
+        { "from": "1199", "to": "1198", "weight": 15 },
+        { "from": "1198", "to": "1199", "weight": 15 },
+        { "from": "1198", "to": "1299", "weight": 25 },
+        { "from": "1299", "to": "1198", "weight": 25 },
+        { "from": "1299", "to": "1298", "weight": 20 },
+        { "from": "1298", "to": "1299", "weight": 20 },
+        { "from": "1299", "to": "1399", "weight": 30 },
+        { "from": "1399", "to": "1299", "weight": 30 },
+        { "from": "1399", "to": "1496", "weight": 35 },
+        { "from": "1496", "to": "1399", "weight": 35 },
+        { "from": "1496", "to": "1498", "weight": 12 },
+        { "from": "1498", "to": "1496", "weight": 12 }    
+    ]      
+  }
+  

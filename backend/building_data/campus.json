@@ -1,0 +1,27 @@
+{
+    "campus": "UMD Campus",
+    "nodes": [
+        { "id": "iribe", "building": "Brendan Iribe Center for Computer Science and Engineering" },
+        { "id": "glenn", "building": "Glenn L. Martin Hall" },
+        { "id": "math", "building": "William E. Kirwan" },
+        { "id": "physics", "building": "John S. Toll Physics Building" },
+        { "id": "symons", "building": "Symons Hall" },
+        { "id": "esj", "building": "Edward St. John Learning and Teaching Center" },
+        { "id": "hjp", "building": "H.J. Patterson Hall" }
+    ],
+    "edges": [
+        { "from": "iribe", "to": "glenn", "weight": 0.06 },
+        { "from": "glenn", "to": "iribe", "weight": 0.06 },
+        { "from": "glenn", "to": "math", "weight": 0.1 },
+        { "from": "math", "to": "glenn", "weight": 0.1 },
+        { "from": "math", "to": "physics", "weight": 0.1 },
+        { "from": "physics", "to": "math", "weight": 0.1 },
+        { "from": "physics", "to": "symons", "weight": 0.1 },
+        { "from": "symons", "to": "physics", "weight": 0.1 },
+        { "from": "symons", "to": "esj", "weight": 0.09 },
+        { "from": "esj", "to": "symons", "weight": 0.09 },
+        { "from": "esj", "to": "hjp", "weight": 0.1 },     
+        { "from": "hjp", "to": "esj", "weight": 0.1 }     
+    ]      
+  }
+  
