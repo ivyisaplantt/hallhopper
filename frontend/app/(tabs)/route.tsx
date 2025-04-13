@@ -31,6 +31,7 @@ const ADDRESS_MAP = {
   hjp: "4065 Campus Dr",
   math: "4176 Campus Dr",
   glenn: "4298 Campus Dr",
+  armory: "4490 Rossborough Ln",
 };
 
 const COORDS_TO_BUILDING = {
@@ -41,6 +42,7 @@ const COORDS_TO_BUILDING = {
   "38.986903,-76.943769": "hjp",
   "38.9883216,-76.9393313": "math",
   "38.98889,-76.9376017": "glenn",
+  "38.9859315,-76.9390126": "armory",
 };
 
 export default function Route() {
@@ -214,7 +216,7 @@ export default function Route() {
         }),
       });
       const data = await response.json();
-      console.log(data);
+      console.log(originCoords);
       setRouteData(data);
       setShowRouteDetails(true);
     } catch (error) {
