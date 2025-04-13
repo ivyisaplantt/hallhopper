@@ -24,13 +24,13 @@ import * as Location from "expo-location";
 import MapView, { Polyline, Marker } from "react-native-maps";
 
 const ADDRESS_MAP = {
-  "iribe": "8125 Paint Branch Drive",
-  "esj": "4131 Campus Dr",
-  "mckeldin": "7649 S Library Ln", 
-  "physics": "4150 Campus Dr",
-  "hjp": "4065 Campus Dr",
-  "math": "4176 Campus Dr",
-  "glenn": "4298 Campus Dr"
+  iribe: "8125 Paint Branch Drive",
+  esj: "4131 Campus Dr",
+  mckeldin: "7649 S Library Ln",
+  physics: "4150 Campus Dr",
+  hjp: "4065 Campus Dr",
+  math: "4176 Campus Dr",
+  glenn: "4298 Campus Dr",
 };
 
 const COORDS_TO_BUILDING = {
@@ -40,7 +40,7 @@ const COORDS_TO_BUILDING = {
   "38.988397,-76.9401164": "physics",
   "38.986903,-76.943769": "hjp",
   "38.9883216,-76.9393313": "math",
-  "38.98889,-76.9376017": "glenn"
+  "38.98889,-76.9376017": "glenn",
 };
 
 export default function Route() {
@@ -48,25 +48,31 @@ export default function Route() {
   const [origin, setOrigin] = useState("");
   const [destination, setDestination] = useState("");
   const [currentLocation, setCurrentLocation] = useState<string | null>(null);
-  const [originCoords, setOriginCoords] = useState<{latitude: number, longitude: number} | null>(null);
-  const [destinationCoords, setDestinationCoords] = useState<{latitude: number, longitude: number} | null>(null);
+  const [originCoords, setOriginCoords] = useState<{
+    latitude: number;
+    longitude: number;
+  } | null>(null);
+  const [destinationCoords, setDestinationCoords] = useState<{
+    latitude: number;
+    longitude: number;
+  } | null>(null);
   const [isKeyboardVisible, setKeyboardVisible] = useState(false);
   const [routeData, setRouteData] = useState<any>(null);
   const [showRouteDetails, setShowRouteDetails] = useState(false);
   const router = useRouter();
 
-  const getBuildingName = (coords: {latitude: number, longitude: number}) => {
+  const getBuildingName = (coords: { latitude: number; longitude: number }) => {
     const coordString = `${coords.latitude},${coords.longitude}`;
     return COORDS_TO_BUILDING[coordString] || "Unknown Location";
   };
 
   useEffect(() => {
     const keyboardDidShowListener = Keyboard.addListener(
-      'keyboardDidShow',
+      "keyboardDidShow",
       () => setKeyboardVisible(true)
     );
     const keyboardDidHideListener = Keyboard.addListener(
-      'keyboardDidHide',
+      "keyboardDidHide",
       () => {
         setKeyboardVisible(false);
         handleGeocoding();
@@ -92,27 +98,29 @@ export default function Route() {
 
     if (originToGeocode) {
       try {
-        const mappedOrigin = ADDRESS_MAP[originToGeocode.toLowerCase()] || originToGeocode;
+        const mappedOrigin =
+          ADDRESS_MAP[originToGeocode.toLowerCase()] || originToGeocode;
         const originResults = await Location.geocodeAsync(mappedOrigin);
         if (originResults.length > 0) {
           setOriginCoords({
             latitude: originResults[0].latitude,
-            longitude: originResults[0].longitude
+            longitude: originResults[0].longitude,
           });
         }
       } catch (error) {
         console.error("Error geocoding origin:", error);
       }
     }
-    
+
     if (destToGeocode) {
       try {
-        const mappedDest = ADDRESS_MAP[destToGeocode.toLowerCase()] || destToGeocode;
+        const mappedDest =
+          ADDRESS_MAP[destToGeocode.toLowerCase()] || destToGeocode;
         const destResults = await Location.geocodeAsync(mappedDest);
         if (destResults.length > 0) {
           setDestinationCoords({
             latitude: destResults[0].latitude,
-            longitude: destResults[0].longitude
+            longitude: destResults[0].longitude,
           });
         }
       } catch (error) {
@@ -173,13 +181,16 @@ export default function Route() {
   const openNativeMap = () => {
     if (!originCoords || !destinationCoords) return;
 
-    const scheme = Platform.select({ ios: 'maps:0,0?saddr=', android: 'geo:0,0?q=' });
+    const scheme = Platform.select({
+      ios: "maps:0,0?saddr=",
+      android: "geo:0,0?q=",
+    });
     const latLngOrigin = `${originCoords.latitude},${originCoords.longitude}`;
     const latLngDest = `${destinationCoords.latitude},${destinationCoords.longitude}`;
-    
+
     const url = Platform.select({
       ios: `maps:0,0?saddr=${latLngOrigin}&daddr=${latLngDest}`,
-      android: `google.navigation:q=${latLngDest}&saddr=${latLngOrigin}`
+      android: `google.navigation:q=${latLngDest}&saddr=${latLngOrigin}`,
     });
 
     Linking.openURL(url as string);
@@ -192,28 +203,28 @@ export default function Route() {
     const destName = getBuildingName(destinationCoords);
 
     try {
-      const response = await fetch('http://10.6.217.100:5000/route', {
-        method: 'POST',
+      const response = await fetch("http://172.23.18.253:5000/route", {
+        method: "POST",
         headers: {
-          'Content-Type': 'application/json',
+          "Content-Type": "application/json",
         },
         body: JSON.stringify({
           from: originName,
           to: destName,
-        })
+        }),
       });
       const data = await response.json();
-      console.log(data)
+      console.log(data);
       setRouteData(data);
       setShowRouteDetails(true);
     } catch (error) {
-      console.error('Error fetching route:', error);
-      Alert.alert('Error', 'Could not fetch route data');
+      console.error("Error fetching route:", error);
+      Alert.alert("Error", "Could not fetch route data");
     }
   };
 
   return (
-    <KeyboardAvoidingView 
+    <KeyboardAvoidingView
       behavior={Platform.OS === "ios" ? "padding" : "height"}
       style={styles.container}
       keyboardVerticalOffset={Platform.OS === "ios" ? 64 : 0}
@@ -224,7 +235,12 @@ export default function Route() {
       </TouchableOpacity>
 
       <MapView
-        style={[styles.map, isKeyboardVisible && { height: Dimensions.get("window").height * 0.1 }]}
+        style={[
+          styles.map,
+          isKeyboardVisible && {
+            height: Dimensions.get("window").height * 0.1,
+          },
+        ]}
         initialRegion={{
           latitude: 38.9869,
           longitude: -76.9426,
@@ -232,17 +248,9 @@ export default function Route() {
           longitudeDelta: 0.0121,
         }}
       >
-        {originCoords && (
-          <Marker
-            coordinate={originCoords}
-            title="Origin"
-          />
-        )}
+        {originCoords && <Marker coordinate={originCoords} title="Origin" />}
         {destinationCoords && (
-          <Marker
-            coordinate={destinationCoords}
-            title="Destination"
-          />
+          <Marker coordinate={destinationCoords} title="Destination" />
         )}
         {originCoords && destinationCoords && (
           <Polyline
@@ -253,9 +261,9 @@ export default function Route() {
         )}
       </MapView>
 
-      <TouchableOpacity 
-        activeOpacity={1} 
-        onPress={Keyboard.dismiss} 
+      <TouchableOpacity
+        activeOpacity={1}
+        onPress={Keyboard.dismiss}
         style={styles.bottomSheet}
       >
         <View style={styles.inputSection}>
@@ -289,7 +297,7 @@ export default function Route() {
                 <Text style={styles.routeTime}>Navigate to Destination</Text>
                 <Text style={styles.routeDetails}>Opens in Maps app</Text>
               </View>
-              <TouchableOpacity 
+              <TouchableOpacity
                 style={styles.goButton}
                 onPress={openNativeMap}
                 disabled={!originCoords || !destinationCoords}
@@ -305,21 +313,36 @@ export default function Route() {
                 <Text style={styles.routeTime}>Indoor Route</Text>
                 {showRouteDetails && routeData ? (
                   <>
-                    <Text style={styles.routeDetails}>Total Distance: {routeData.total_distance} miles</Text>
+                    <Text style={styles.routeDetails}>
+                      Total Distance: {routeData.total_distance} miles
+                    </Text>
                     <View style={styles.buildingList}>
-                      <Text style={styles.buildingHeader}>Buildings on Route:</Text>
+                      <Text style={styles.buildingHeader}>
+                        Buildings on Route:
+                      </Text>
                       {routeData.route.map((building, index) => (
-                        <Text key={index} style={styles.buildingItem}>
-                          {index + 1}. {building.building}
-                        </Text>
+                        <View key={index} style={styles.buildingItem}>
+                          <Text>
+                            {index + 1}. {building.building}
+                          </Text>
+                          {building.indoor_path.length > 0 ? (
+                            <Text>
+                              Indoor Path: {building.indoor_path.join(", ")}
+                            </Text>
+                          ) : (
+                            <Text>No indoor path available</Text>
+                          )}
+                        </View>
                       ))}
                     </View>
                   </>
                 ) : (
-                  <Text style={styles.routeDetails}>Click Go to see route details</Text>
+                  <Text style={styles.routeDetails}>
+                    Click Go to see route details
+                  </Text>
                 )}
               </View>
-              <TouchableOpacity 
+              <TouchableOpacity
                 style={styles.goButton}
                 onPress={fetchRouteData}
                 disabled={!originCoords || !destinationCoords}
