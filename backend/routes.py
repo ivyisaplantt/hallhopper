@@ -156,27 +156,31 @@ def get_indoor_route(start, end, building_id):
 
 def get_campus_route(start, end):
     try:
-        # Find campus-level path between buildings
+        # Find the shortest path between buildings
         campus_path = nx.dijkstra_path(campus_graph, start, end, weight='weight')
-        total_outdoor_distance = sum(
-            campus_graph[campus_path[i]][campus_path[i+1]]['weight']
-            for i in range(len(campus_path)-1)
-        )
-
-        # Initialize response with route structure
+        
+        # Map building IDs to their names using campus.json nodes
+        building_names = {node['id']: node['building'] for node in campus_graph.nodes.values()}
+        
+        # Calculate total outdoor distance
+        total_outdoor_distance = 0
+        for i in range(len(campus_path) - 1):
+            total_outdoor_distance += campus_graph[campus_path[i]][campus_path[i + 1]]['weight']
+        
+        # Initialize response structure
         complete_path = {
             "route": [],
             "total_distance": total_outdoor_distance
         }
-
+        
         # Process each building in the campus path
         for i, building_id in enumerate(campus_path):
-            building_data = {"building": building_id, "indoor_path": []}
+            building_data = {"building": building_names.get(building_id, building_id), "indoor_path": []}
 
             if building_id in building_graphs:
                 # Get adjacent buildings for entry/exit determination
-                prev_building = campus_path[i-1] if i > 0 else None
-                next_building = campus_path[i+1] if i < len(campus_path)-1 else None
+                prev_building = campus_path[i - 1] if i > 0 else None
+                next_building = campus_path[i + 1] if i < len(campus_path) - 1 else None
 
                 # Determine entry/exit points using BUILDING_ENTRY_EXITS
                 entry, exit = None, None
