@@ -1,0 +1,30 @@
+{
+    "building": "John S. Toll Physics Building",
+    "nodes": [
+        { "id": "1199", "floor": 1, "type": "entrance" },
+        { "id": "1196", "floor": 1, "type": "hallway" },
+        { "id": "1197", "floor": 1, "type": "hallway" },
+        { "id": "1299", "floor": 1, "type": "hallway" },
+        { "id": "1394", "floor": 1, "type": "hallway" },
+        { "id": "1386", "floor": 1, "type": "stair" },
+        { "id": "1494", "floor": 1, "type": "hallway" },
+        { "id": "1497", "floor": 1, "type": "hallway" }
+    ],
+    "edges": [
+        { "from": "1196", "to": "1199", "weight": 10 },
+        { "from": "1199", "to": "1196", "weight": 10 },
+        { "from": "1199", "to": "1197", "weight": 8 },
+        { "from": "1197", "to": "1199", "weight": 8 },
+        { "from": "1199", "to": "1299", "weight": 12 },
+        { "from": "1299", "to": "1199", "weight": 12 },
+        { "from": "1299", "to": "1394", "weight": 15 },
+        { "from": "1394", "to": "1299", "weight": 15 },
+        { "from": "1394", "to": "1396", "weight": 10 },
+        { "from": "1396", "to": "1394", "weight": 10 },
+        { "from": "1396", "to": "1494", "weight": 18 },
+        { "from": "1494", "to": "1396", "weight": 18 },
+        { "from": "1494", "to": "1497", "weight": 8 },
+        { "from": "1497", "to": "1494", "weight": 8 }      
+    ]      
+  }
+  
