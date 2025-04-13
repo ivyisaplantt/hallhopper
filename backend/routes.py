@@ -91,7 +91,7 @@ def get_nodes():
 # Entry/exit points mapping
 BUILDING_ENTRY_EXITS = {
     'math': {
-        'glenn': {'entry': '0493', 'exit': '0493'},  # Coming from/going to engineering
+        'glenn': {'entry': '1298', 'exit': '1298'},  # Coming from/going to engineering
         'physics': {'entry': '1199', 'exit': '1199'} # Coming from/going to physics
     },
     'physics': {
