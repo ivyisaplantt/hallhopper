@@ -8,10 +8,10 @@ Using advanced routing algorithms and detailed building floor plans, the app ens
 
 Key features include:
 
-*Indoor Navigation: Leveraging detailed floor plans to guide users through buildings.
+* Indoor Navigation: Leveraging detailed floor plans to guide users through buildings.
 
-*Outdoor Navigation: Utilizing GPS-based routing to connect users between buildings.
+* Outdoor Navigation: Utilizing GPS-based routing to connect users between buildings.
 
-*Weather Adaptability: Prioritizing indoor paths to protect users from rain, cold, or heat.
+* Weather Adaptability: Prioritizing indoor paths to protect users from rain, cold, or heat.
 
-*User-Friendly Interface: A clean and intuitive React Native interface with map visualization and step-by-step directions.
+* User-Friendly Interface: A clean and intuitive React Native interface with map visualization and step-by-step directions.
