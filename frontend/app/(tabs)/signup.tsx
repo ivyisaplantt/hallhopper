@@ -88,7 +88,7 @@ function SignUp() {
             secureTextEntry
             autoComplete="new-password"
           />
-          {error ? <Text style={[styles.error, error.includes('verification') ? styles.success : null]}>{error}</Text> : null}
+          {error ? <Text style={styles.error}>{error}</Text> : null}
           
           <TouchableOpacity style={styles.signupButton} onPress={handleSignUp}>
             <Text style={styles.buttonText}>Sign Up</Text>
@@ -144,9 +144,6 @@ const styles = StyleSheet.create({
     fontFamily: "Cormorant Garamond",
     textAlign: "center",
     marginVertical: 10,
-  },
-  success: {
-    color: "green",
   },
   signupButton: {
     backgroundColor: "#D6EABD",

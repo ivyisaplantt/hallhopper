@@ -37,7 +37,7 @@ function Login() {
         setError(error.message);
       } else {
         setError('');
-        router.replace('/'); // Using replace instead of push to prevent going back to login
+        router.replace('/');
       }
     } catch (err) {
       setError('An unexpected error occurred');
@@ -53,9 +53,14 @@ function Login() {
     <KeyboardAvoidingView
       style={styles.container}
       behavior={Platform.OS === "ios" ? "padding" : "height"}
+      keyboardVerticalOffset={Platform.OS === "ios" ? -64 : 0}
     >
       <Stack.Screen options={{ headerShown: false }} />
-      <ScrollView contentContainerStyle={styles.scrollContent}>
+      <ScrollView 
+        contentContainerStyle={styles.scrollContent}
+        keyboardShouldPersistTaps="handled"
+        bounces={false}
+      >
         <View style={styles.logo}>
           <Image source={LogoImage} style={styles.image} />
         </View>
@@ -155,7 +160,6 @@ const styles = StyleSheet.create({
   },
   buttonText: {
     color: "#000000",
-    textAlign: "center",
     fontSize: 18,
     fontFamily: "Cormorant Garamond",
   }

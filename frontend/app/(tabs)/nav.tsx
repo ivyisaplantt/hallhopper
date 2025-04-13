@@ -5,6 +5,7 @@ import {
   StyleSheet,
   TouchableOpacity,
   ScrollView,
+  Keyboard,
 } from "react-native";
 import { SearchBar } from "@rneui/themed";
 import { Image } from "expo-image";
@@ -75,7 +76,7 @@ export default function Nav() {
           </View>
         </TouchableOpacity>
 
-        {["Bookmark 1", "Bookmark 2", "Bookmark 3"].map((bookmark, index) => (
+        {["8125 Paint Branch Dr (Iribe)", "4065 Campus Dr (HJP)", "4150 Campus Dr (Physics)"].map((bookmark, index) => (
           <TouchableOpacity
             key={index}
             onPress={() => navigateToRoute(bookmark)}

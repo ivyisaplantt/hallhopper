@@ -9,12 +9,25 @@ import {
 } from "react-native";
 import { Image } from "expo-image";
 import { Stack, useRouter } from "expo-router";
+import { useEffect, useState } from "react";
+import { supabase } from "../../lib/supabase";
 
 const LogoImage = require("@/assets/images/hallhopperlogo.png");
 const SearchImage = require("@/assets/images/Magnifier.png");
 
 export default function Index() {
   const router = useRouter();
+  const [session, setSession] = useState(null);
+
+  useEffect(() => {
+    supabase.auth.getSession().then(({ data: { session } }) => {
+      setSession(session);
+    });
+
+    supabase.auth.onAuthStateChange((_event, session) => {
+      setSession(session);
+    });
+  }, []);
 
   const handleSearchPress = () => {
     router.push("/nav");
@@ -26,6 +39,14 @@ export default function Index() {
 
   const handleSignUp = () => {
     router.push("/signup");
+  };
+
+  const handleBookmarks = () => {
+    router.push("/mybookmarks");
+  };
+
+  const handleHomeLocation = () => {
+    router.push("/sethome");
   };
   
   return (
@@ -50,14 +71,25 @@ export default function Index() {
           </View>
         </TouchableOpacity>
 
-        <View style={styles.authButtons}>
-          <TouchableOpacity style={styles.loginButton} onPress={handleLogin}>
-            <Text style={styles.loginText}>Login</Text>
-          </TouchableOpacity>
-          <TouchableOpacity style={styles.signupButton} onPress={handleSignUp}>
-            <Text style={styles.signupText}>Sign Up</Text>
-          </TouchableOpacity>
-        </View>
+        {!session ? (
+          <View style={styles.authButtons}>
+            <TouchableOpacity style={styles.loginButton} onPress={handleLogin}>
+              <Text style={styles.loginText}>Login</Text>
+            </TouchableOpacity>
+            <TouchableOpacity style={styles.signupButton} onPress={handleSignUp}>
+              <Text style={styles.signupText}>Sign Up</Text>
+            </TouchableOpacity>
+          </View>
+        ) : (
+          <View style={styles.userButtons}>
+            <TouchableOpacity style={styles.bookmarksButton} onPress={handleBookmarks}>
+              <Text style={styles.buttonText}>My Bookmarks</Text>
+            </TouchableOpacity>
+            <TouchableOpacity style={styles.homeLocationButton} onPress={handleHomeLocation}>
+              <Text style={styles.buttonText}>Set Home</Text>
+            </TouchableOpacity>
+          </View>
+        )}
       </ScrollView>
     </KeyboardAvoidingView>
   );
@@ -120,6 +152,11 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
     gap: 20,
   },
+  userButtons: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    gap: 20,
+  },
   loginButton: {
     borderWidth: 1,
     borderColor: "#000000",
@@ -134,6 +171,20 @@ const styles = StyleSheet.create({
     paddingVertical: 10,
     borderRadius: 8,
   },
+  bookmarksButton: {
+    backgroundColor: "#D6EABD",
+    paddingHorizontal: 30,
+    paddingVertical: 10,
+    borderRadius: 8,
+  },
+  homeLocationButton: {
+    borderWidth: 1,
+    borderColor: "#000000",
+    paddingHorizontal: 30,
+    paddingVertical: 10,
+    borderRadius: 8,
+    backgroundColor: "#FFFFFF",
+  },
   loginText: {
     color: "#000000",
     fontSize: 18,
@@ -144,4 +195,9 @@ const styles = StyleSheet.create({
     fontSize: 18,
     fontFamily: "Cormorant Garamond",
   },
+  buttonText: {
+    color: "#000000",
+    fontSize: 18,
+    fontFamily: "Cormorant Garamond",
+  }
 });
