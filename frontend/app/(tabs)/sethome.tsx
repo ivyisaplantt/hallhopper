@@ -70,7 +70,6 @@ export default function SetHome() {
         .single();
 
       if (existingHome) {
-        // Update existing home
         const { error } = await supabase
           .from('user_homes')
           .update({ location: homeLocation })
@@ -78,7 +77,6 @@ export default function SetHome() {
 
         if (error) throw error;
       } else {
-        // Insert new home
         const { error } = await supabase
           .from('user_homes')
           .insert({

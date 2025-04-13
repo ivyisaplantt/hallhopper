@@ -11,6 +11,7 @@ import {
   KeyboardAvoidingView,
   Platform,
   Linking,
+  Alert,
 } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import {
@@ -25,11 +26,21 @@ import MapView, { Polyline, Marker } from "react-native-maps";
 const ADDRESS_MAP = {
   "iribe": "8125 Paint Branch Drive",
   "esj": "4131 Campus Dr",
-  "mckeldin": "7649 S Library Ln",
+  "mckeldin": "7649 S Library Ln", 
   "physics": "4150 Campus Dr",
   "hjp": "4065 Campus Dr",
-  "kirwan": "4176 Campus Dr",
-  "martin": "4298 Campus Dr"
+  "math": "4176 Campus Dr",
+  "glenn": "4298 Campus Dr"
+};
+
+const COORDS_TO_BUILDING = {
+  "38.9891976,-76.9364811": "iribe",
+  "38.9870707,-76.9417084": "esj",
+  "38.9858918,-76.9449387": "mckeldin",
+  "38.988397,-76.9401164": "physics",
+  "38.986903,-76.943769": "hjp",
+  "38.9883216,-76.9393313": "math",
+  "38.98889,-76.9376017": "glenn"
 };
 
 export default function Route() {
@@ -40,7 +51,14 @@ export default function Route() {
   const [originCoords, setOriginCoords] = useState<{latitude: number, longitude: number} | null>(null);
   const [destinationCoords, setDestinationCoords] = useState<{latitude: number, longitude: number} | null>(null);
   const [isKeyboardVisible, setKeyboardVisible] = useState(false);
+  const [routeData, setRouteData] = useState<any>(null);
+  const [showRouteDetails, setShowRouteDetails] = useState(false);
   const router = useRouter();
+
+  const getBuildingName = (coords: {latitude: number, longitude: number}) => {
+    const coordString = `${coords.latitude},${coords.longitude}`;
+    return COORDS_TO_BUILDING[coordString] || "Unknown Location";
+  };
 
   useEffect(() => {
     const keyboardDidShowListener = Keyboard.addListener(
@@ -134,6 +152,7 @@ export default function Route() {
   useFocusEffect(
     React.useCallback(() => {
       getCurrentLocation();
+      setShowRouteDetails(false);
     }, [])
   );
 
@@ -164,6 +183,33 @@ export default function Route() {
     });
 
     Linking.openURL(url as string);
+  };
+
+  const fetchRouteData = async () => {
+    if (!originCoords || !destinationCoords) return;
+
+    const originName = getBuildingName(originCoords);
+    const destName = getBuildingName(destinationCoords);
+
+    try {
+      const response = await fetch('http://10.6.217.100:5000/route', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          from: originName,
+          to: destName,
+        })
+      });
+      const data = await response.json();
+      console.log(data)
+      setRouteData(data);
+      setShowRouteDetails(true);
+    } catch (error) {
+      console.error('Error fetching route:', error);
+      Alert.alert('Error', 'Could not fetch route data');
+    }
   };
 
   return (
@@ -253,24 +299,35 @@ export default function Route() {
             </View>
           ))}
 
-          {originCoords && destinationCoords && [1].map((route, index) => (
-            <View key={`internal-${index}`} style={[styles.routeCard, styles.lastCard]}>
+          {originCoords && destinationCoords && (
+            <View style={styles.routeCard}>
               <View style={{ flex: 1 }}>
-                <Text style={styles.routeTime}>Get Indoor Directions</Text>
-                <Text style={styles.routeDetails}>Uses internal navigation</Text>
+                <Text style={styles.routeTime}>Indoor Route</Text>
+                {showRouteDetails && routeData ? (
+                  <>
+                    <Text style={styles.routeDetails}>Total Distance: {routeData.total_distance} miles</Text>
+                    <View style={styles.buildingList}>
+                      <Text style={styles.buildingHeader}>Buildings on Route:</Text>
+                      {routeData.route.map((building, index) => (
+                        <Text key={index} style={styles.buildingItem}>
+                          {index + 1}. {building.building}
+                        </Text>
+                      ))}
+                    </View>
+                  </>
+                ) : (
+                  <Text style={styles.routeDetails}>Click Go to see route details</Text>
+                )}
               </View>
               <TouchableOpacity 
                 style={styles.goButton}
-                onPress={() => {
-                  // TODO: Call internal Flask API endpoint
-                  console.log("Will call internal API");
-                }}
+                onPress={fetchRouteData}
                 disabled={!originCoords || !destinationCoords}
               >
                 <Text style={styles.goText}>Go</Text>
               </TouchableOpacity>
             </View>
-          ))}
+          )}
         </ScrollView>
       </TouchableOpacity>
     </KeyboardAvoidingView>
@@ -354,16 +411,35 @@ const styles = StyleSheet.create({
     padding: 15,
     marginBottom: 15,
     flexDirection: "row",
-    alignItems: "center",
+    alignItems: "flex-start",
   },
   routeTime: {
     fontSize: 18,
     fontWeight: "bold",
     fontFamily: "Cormorant Garamond",
+    marginBottom: 5,
   },
   routeDetails: {
     fontSize: 14,
     color: "#555",
+    fontFamily: "Cormorant Garamond",
+    marginBottom: 10,
+  },
+  buildingList: {
+    marginTop: 5,
+  },
+  buildingHeader: {
+    fontSize: 14,
+    fontWeight: "bold",
+    color: "#333",
+    marginBottom: 5,
+    fontFamily: "Cormorant Garamond",
+  },
+  buildingItem: {
+    fontSize: 14,
+    color: "#555",
+    marginLeft: 10,
+    marginBottom: 3,
     fontFamily: "Cormorant Garamond",
   },
   goButton: {
